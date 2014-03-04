@@ -1,3 +1,17 @@
+from urllib2 import urlopen
+from httplib import IncompleteRead
+from bs4 import BeautifulSoup as bs
+import re
+#from nltk.stem.porter import PorterStemmer
+import numpy as np
+#import string,math
+#from itertools import combinations
+
+text = ''
+baseUrl = "http://www.tripadvisor.com"
+topic_count = 0
+post_count = 0
+
 def find_forum_for_loc(searchStr):
     searchStr = "_".join(searchStr.split())
     searchUrl = baseUrl+"/Search?q="+searchStr
@@ -62,9 +76,21 @@ def scrape_topic_page(topicLink,isFirstPage):
         posts.remove(posts[0])
     for p in posts:
         t = p.get_text().encode('utf8')
-        m = re.match('(.*)Removed',t)
+        m = re.match('(.*)Removed',t.encode('string-escape'))
         if not m:
             post_count += 1
-            text = text+re.sub('\n+',' ',re.sub(r'([a-z|A-Z|0-9]) *\n',r'\1. ',t))
+            text = text+'\n'+t
     
     scrape_topic_page(get_next_page(soup),False)
+
+##f = open('t.txt','r')
+##text = f.read()
+##f.close()
+
+visit_topic_pages(find_forum_for_loc("ahmedabad"))
+##print "# of topics",topic_count
+##print "# of Posts",post_count
+#print highlight_doc(text)
+f = open('t.txt','w')
+f.write(text)
+f.close()
