@@ -76,9 +76,12 @@ def scrape_topic_page(topicLink,isFirstPage):
         posts.remove(posts[0])
     for p in posts:
         t = p.get_text().encode('utf8')
+        #needed this to handle \n as part of the string instead
+        #of newlines which don't find a match even if it exists.
         m = re.match('(.*)Removed',t.encode('string-escape'))
         if not m:
             post_count += 1
+            #insert newline after every post. This is handled in the summarizer
             text = text+'\n'+t
     
     scrape_topic_page(get_next_page(soup),False)
@@ -87,10 +90,10 @@ def scrape_topic_page(topicLink,isFirstPage):
 ##text = f.read()
 ##f.close()
 
-visit_topic_pages(find_forum_for_loc("ahmedabad"))
-##print "# of topics",topic_count
-##print "# of Posts",post_count
-#print highlight_doc(text)
-f = open('t.txt','w')
-f.write(text)
-f.close()
+##visit_topic_pages(find_forum_for_loc("ahmedabad"))
+####print "# of topics",topic_count
+####print "# of Posts",post_count
+###print highlight_doc(text)
+##f = open('t.txt','w')
+##f.write(text)
+##f.close()
